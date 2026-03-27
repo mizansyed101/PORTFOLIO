@@ -81,12 +81,12 @@ const Admin = ({ theme }) => {
 
   if (!isAuth) {
     return (
-      <main style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'var(--bg-color)' }}>
+      <main style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'var(--bg-color)', padding: '2rem' }}>
         <motion.div 
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           className="glass" 
-          style={{ padding: '4rem', width: '450px', textAlign: 'center', borderRadius: '24px' }}
+          style={{ padding: 'clamp(2rem, 5vw, 4rem)', width: '100%', maxWidth: '450px', textAlign: 'center', borderRadius: '24px' }}
         >
           <div style={{ color: 'var(--primary-color)', fontSize: '0.75rem', fontWeight: 800, letterSpacing: '0.4em', marginBottom: '1rem', textTransform: 'uppercase' }}>Secure Gateway</div>
           <h2 style={{ fontSize: '2.5rem', fontWeight: 800, marginBottom: '2.5rem' }}>ADMIN PANEL</h2>
@@ -126,9 +126,20 @@ const Admin = ({ theme }) => {
   ];
 
   return (
-    <div style={{ display: 'flex', minHeight: '100vh', background: 'var(--bg-color)', color: 'var(--text-primary)' }}>
+    <div className="admin-container" style={{ display: 'flex', minHeight: '100vh', background: 'var(--bg-color)', color: 'var(--text-primary)' }}>
       {/* Sidebar */}
-      <aside className="glass" style={{ width: '300px', padding: '2.5rem', height: '100vh', position: 'fixed', left: 0, top: 0, zIndex: 10, display: 'flex', flexDirection: 'column', borderRadius: '0 32px 32px 0' }}>
+      <aside className="admin-sidebar glass" style={{ 
+        width: '300px', 
+        padding: '2.5rem', 
+        height: '100vh', 
+        position: 'fixed', 
+        left: 0, 
+        top: 0, 
+        zIndex: 10, 
+        display: 'flex', 
+        flexDirection: 'column', 
+        borderRadius: '0 32px 32px 0' 
+      }}>
         <div style={{ marginBottom: '4rem' }}>
           <h3 style={{ fontSize: '1.5rem', fontWeight: 800 }}>MIZAN<span style={{ color: 'var(--primary-color)' }}>.</span>CMS</h3>
           <span style={{ fontSize: '0.7rem', color: 'var(--text-secondary)', textTransform: 'uppercase', letterSpacing: '0.1em' }}>v3.0.1 PRO</span>
@@ -156,13 +167,14 @@ const Admin = ({ theme }) => {
               }}
             >
               <span style={{ fontSize: '1.1rem' }}>{item.icon}</span>
-              {item.id}
+              <span className="nav-text">{item.id}</span>
             </button>
           ))}
         </nav>
 
         <button 
           onClick={() => setIsAuth(false)}
+          className="logout-btn"
           style={{ padding: '1rem', background: 'transparent', border: '1px solid #ff4444', color: '#ff4444', borderRadius: '12px', cursor: 'pointer', fontWeight: 600, fontSize: '0.8rem' }}
         >
           LOGOUT SESSION
@@ -170,11 +182,11 @@ const Admin = ({ theme }) => {
       </aside>
 
       {/* Content */}
-      <main style={{ marginLeft: '300px', flex: 1, padding: '4rem 6rem' }}>
-        <header style={{ marginBottom: '4rem', display: 'flex', justifyContent: 'space-between', alignItems: 'end' }}>
+      <main className="admin-main" style={{ marginLeft: '300px', flex: 1, padding: 'clamp(2rem, 5vw, 4rem) clamp(1.5rem, 5vw, 6rem)' }}>
+        <header style={{ marginBottom: '4rem', display: 'flex', justifyContent: 'space-between', alignItems: 'end', flexWrap: 'wrap', gap: '2rem' }}>
           <div>
             <span style={{ color: 'var(--primary-color)', fontWeight: 700, fontSize: '0.8rem', textTransform: 'uppercase', letterSpacing: '0.2em' }}>Management Path</span>
-            <h2 style={{ fontSize: '3rem', fontWeight: 800 }}>{activeTab}</h2>
+            <h2 style={{ fontSize: 'clamp(2rem, 4vw, 3rem)', fontWeight: 800 }}>{activeTab}</h2>
           </div>
           <p style={{ color: 'var(--text-secondary)', fontSize: '0.9rem' }}>System Status: <span style={{ color: '#2ecc71', fontWeight: 700 }}>● ONLINE</span></p>
         </header>
@@ -189,15 +201,15 @@ const Admin = ({ theme }) => {
               transition={{ duration: 0.3 }}
             >
               {activeTab === 'Overview' && (
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '2rem' }}>
-                  <div className="card" style={{ padding: '2.5rem' }}>
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '2rem' }}>
+                  <div className="card" style={{ padding: '2rem' }}>
                     <span style={{ fontSize: '0.75rem', color: 'var(--text-secondary)', fontWeight: 700, textTransform: 'uppercase' }}>Experience Blocks</span>
-                    <p style={{ fontSize: '4rem', fontWeight: 800, color: 'var(--primary-color)', margin: '1rem 0' }}>{experiences.length}</p>
+                    <p style={{ fontSize: 'clamp(3rem, 5vw, 4rem)', fontWeight: 800, color: 'var(--primary-color)', margin: '1rem 0' }}>{experiences.length}</p>
                     <p style={{ fontSize: '0.9rem', color: 'var(--text-secondary)' }}>All industry records parsed</p>
                   </div>
-                  <div className="card" style={{ padding: '2.5rem' }}>
+                  <div className="card" style={{ padding: '2rem' }}>
                     <span style={{ fontSize: '0.75rem', color: 'var(--text-secondary)', fontWeight: 700, textTransform: 'uppercase' }}>Production Projects</span>
-                    <p style={{ fontSize: '4rem', fontWeight: 800, color: 'var(--primary-color)', margin: '1rem 0' }}>{projects.length}</p>
+                    <p style={{ fontSize: 'clamp(3rem, 5vw, 4rem)', fontWeight: 800, color: 'var(--primary-color)', margin: '1rem 0' }}>{projects.length}</p>
                     <p style={{ fontSize: '0.9rem', color: 'var(--text-secondary)' }}>Live on digital grid</p>
                   </div>
                 </div>
@@ -223,7 +235,7 @@ const Admin = ({ theme }) => {
               {activeTab === 'Experience' && (
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
                   {experiences.map((exp) => (
-                    <div key={exp.id} className="card" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1.5rem' }}>
+                    <div key={exp.id} className="card" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '1.5rem' }}>
                       <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
                         <label style={{ fontSize: '0.65rem', fontWeight: 800, color: 'var(--text-secondary)' }}>ROLE</label>
                         <input value={exp.job_title} onChange={(e) => handleExperienceChange(exp.id, 'job_title', e.target.value)} style={{ backgroundColor: 'var(--bg-color)', border: '1px solid var(--border-color)', padding: '1rem', color: 'var(--text-primary)', borderRadius: '8px' }} />
@@ -232,11 +244,11 @@ const Admin = ({ theme }) => {
                         <label style={{ fontSize: '0.65rem', fontWeight: 800, color: 'var(--text-secondary)' }}>COMPANY</label>
                         <input value={exp.company} onChange={(e) => handleExperienceChange(exp.id, 'company', e.target.value)} style={{ backgroundColor: 'var(--bg-color)', border: '1px solid var(--border-color)', padding: '1rem', color: 'var(--text-primary)', borderRadius: '8px' }} />
                       </div>
-                      <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem', gridColumn: 'span 2' }}>
+                      <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem', gridColumn: '1 / -1' }}>
                         <label style={{ fontSize: '0.65rem', fontWeight: 800, color: 'var(--text-secondary)' }}>TIMELINE</label>
                         <input value={exp.date_range} onChange={(e) => handleExperienceChange(exp.id, 'date_range', e.target.value)} style={{ backgroundColor: 'var(--bg-color)', border: '1px solid var(--border-color)', padding: '1rem', color: 'var(--text-primary)', borderRadius: '8px' }} />
                       </div>
-                      <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem', gridColumn: 'span 2' }}>
+                      <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem', gridColumn: '1 / -1' }}>
                         <label style={{ fontSize: '0.65rem', fontWeight: 800, color: 'var(--text-secondary)' }}>DESCRIPTION</label>
                         <textarea value={exp.description} onChange={(e) => handleExperienceChange(exp.id, 'description', e.target.value)} rows="3" style={{ backgroundColor: 'var(--bg-color)', border: '1px solid var(--border-color)', padding: '1rem', color: 'var(--text-primary)', borderRadius: '8px', resize: 'vertical' }} />
                       </div>
@@ -263,7 +275,7 @@ const Admin = ({ theme }) => {
                         />
                       </div>
 
-                      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
+                      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '1rem' }}>
                         <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
                           <label style={{ fontSize: '0.6rem', fontWeight: 800 }}>LIVE DEPLOYMENT</label>
                           <input value={proj.demo_link} onChange={(e) => handleProjectChange(proj.id, 'demo_link', e.target.value)} style={{ backgroundColor: 'var(--bg-color)', border: '1px solid var(--border-color)', padding: '0.8rem', color: 'var(--text-primary)', borderRadius: '8px' }} />
@@ -279,18 +291,17 @@ const Admin = ({ theme }) => {
                 </div>
               )}
 
-
               {activeTab === 'Skills' && (
                 <div className="card" style={{ display: 'flex', flexDirection: 'column', gap: '2rem' }}>
-                  <div style={{ display: 'flex', gap: '1rem' }}>
+                  <div style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap' }}>
                     <input 
                       value={newSkill} 
                       onChange={(e) => setNewSkill(e.target.value)} 
                       placeholder="Add new skill (e.g. Docker)" 
-                      style={{ flex: 1, backgroundColor: 'var(--bg-color)', border: '1px solid var(--border-color)', padding: '1rem', color: 'var(--text-primary)', borderRadius: '8px' }} 
+                      style={{ flex: 1, minWidth: '200px', backgroundColor: 'var(--bg-color)', border: '1px solid var(--border-color)', padding: '1rem', color: 'var(--text-primary)', borderRadius: '8px' }} 
                       onKeyPress={(e) => e.key === 'Enter' && addSkill()}
                     />
-                    <button onClick={addSkill} style={{ padding: '0 2rem', backgroundColor: 'var(--primary-color)', color: 'white', border: 'none', borderRadius: '8px', fontWeight: 700, cursor: 'pointer' }}>ADD</button>
+                    <button onClick={addSkill} style={{ padding: '0 2rem', height: '3.5rem', backgroundColor: 'var(--primary-color)', color: 'white', border: 'none', borderRadius: '8px', fontWeight: 700, cursor: 'pointer' }}>ADD</button>
                   </div>
                   <div style={{ display: 'flex', flexWrap: 'wrap', gap: '1rem' }}>
                     {skills.map(skill => (
@@ -306,7 +317,7 @@ const Admin = ({ theme }) => {
               {activeTab === 'Social Links' && (
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
                   {socials.map((soc) => (
-                    <div key={soc.id} className="card" style={{ display: 'grid', gridTemplateColumns: 'minmax(150px, 1fr) 2fr', gap: '1.5rem' }}>
+                    <div key={soc.id} className="card" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(150px, 1fr))', gap: '1.5rem' }}>
                       <input value={soc.platform} onChange={(e) => handleSocialChange(soc.id, 'platform', e.target.value)} placeholder="Node" style={{ backgroundColor: 'var(--bg-color)', border: '1px solid var(--border-color)', padding: '1rem', color: 'var(--text-primary)', borderRadius: '8px' }} />
                       <input value={soc.url} onChange={(e) => handleSocialChange(soc.id, 'url', e.target.value)} placeholder="Target URL" style={{ backgroundColor: 'var(--bg-color)', border: '1px solid var(--border-color)', padding: '1rem', color: 'var(--text-primary)', borderRadius: '8px' }} />
                     </div>
@@ -321,6 +332,7 @@ const Admin = ({ theme }) => {
       <motion.div 
         initial={{ y: 100 }} 
         animate={{ y: 0 }} 
+        className="floating-save"
         style={{ 
           position: 'fixed', 
           bottom: 40, 
@@ -337,7 +349,7 @@ const Admin = ({ theme }) => {
           zIndex: 100 
         }}
       >
-        <span style={{ fontSize: '0.8rem', letterSpacing: '0.1em' }}>
+        <span className="desktop-only" style={{ fontSize: '0.8rem', letterSpacing: '0.1em' }}>
           {isSaving ? 'UPLOADING...' : 'BACKEND SYNC: READY'}
         </span>
         <button 
@@ -347,7 +359,7 @@ const Admin = ({ theme }) => {
             backgroundColor: 'rgba(255,255,255,0.2)', 
             border: 'none', 
             color: 'white',
-            padding: '0.5rem 1rem',
+            padding: '0.5rem 1.5rem',
             borderRadius: '8px',
             cursor: isSaving ? 'not-allowed' : 'pointer', 
             fontWeight: '900', 
@@ -357,10 +369,63 @@ const Admin = ({ theme }) => {
           {isSaving ? 'SAVING...' : 'PUSH CHANGES'}
         </button>
       </motion.div>
+
+      <style dangerouslySetInnerHTML={{ __html: `
+        @media (max-width: 1024px) {
+          .admin-sidebar {
+            width: 80px !important;
+            padding: 2.5rem 1rem !important;
+            border-radius: 0 !important;
+          }
+          .admin-sidebar h3, .admin-sidebar span.nav-text, .admin-sidebar .logout-btn {
+            display: none !important;
+          }
+          .admin-main {
+            margin-left: 80px !important;
+          }
+        }
+        
+        @media (max-width: 768px) {
+          .admin-container {
+            flex-direction: column !important;
+          }
+          .admin-sidebar {
+            width: 100% !important;
+            height: auto !important;
+            position: sticky !important;
+            padding: 1rem !important;
+            flex-direction: row !important;
+            overflow-x: auto;
+            border-radius: 0 !important;
+            border-bottom: 1px solid var(--border-color);
+          }
+          .admin-sidebar div {
+            display: none !important;
+          }
+          .admin-sidebar nav {
+            flex-direction: row !important;
+            gap: 0.5rem !important;
+          }
+          .admin-sidebar button {
+            padding: 0.75rem !important;
+            justify-content: center !important;
+          }
+          .admin-main {
+            margin-left: 0 !important;
+            padding: 2rem 1.5rem !important;
+          }
+          .floating-save {
+            right: 20px !important;
+            bottom: 20px !important;
+            left: 20px !important;
+            justify-content: center !important;
+            gap: 1rem !important;
+            padding: 1rem !important;
+          }
+        }
+      `}} />
     </div>
   );
 };
 
-
 export default Admin;
-

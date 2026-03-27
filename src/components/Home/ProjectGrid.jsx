@@ -25,9 +25,10 @@ const ProjectGrid = () => {
 
       <div style={{ 
         display: 'grid', 
-        gridTemplateColumns: 'repeat(auto-fit, minmax(360px, 1fr))', 
-        gap: '2.5rem' 
+        gridTemplateColumns: 'repeat(auto-fit, minmax(clamp(280px, 40vw, 400px), 1fr))', 
+        gap: 'clamp(1.5rem, 4vw, 2.5rem)' 
       }}>
+
         {projects.map((project) => (
           <motion.div
             key={project.id}
@@ -38,13 +39,14 @@ const ProjectGrid = () => {
             className="glass"
             style={{ 
               borderRadius: '24px',
-              padding: '3rem',
+              padding: 'clamp(1.5rem, 5vw, 3rem)',
               display: 'flex',
               flexDirection: 'column',
               justifyContent: 'space-between',
               transition: 'border-color 0.3s ease',
               border: '1px solid var(--border-color)'
             }}
+
           >
             <div>
               <div style={{ display: 'flex', gap: '0.6rem', marginBottom: '1.5rem', flexWrap: 'wrap' }}>
