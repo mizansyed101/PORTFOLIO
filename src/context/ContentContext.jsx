@@ -1,5 +1,4 @@
 import { createContext, useContext, useState, useEffect } from 'react';
-import { supabase } from '../lib/supabase';
 
 const ContentContext = createContext();
 
@@ -11,32 +10,12 @@ export const ContentProvider = ({ children }) => {
   });
 
   const [experiences, setExperiences] = useState([
-    {
-      id: '1',
-      job_title: 'AI Engineer',
-      company: 'Cognizant / Macy\'s',
-      date_range: '2022 — Present',
-      description: 'Developing high-performance digital experiences and AI-driven platforms for enterprise projects.'
-    },
-    {
-      id: '2',
-      job_title: 'Managing Director',
-      company: 'Galaxy Traders',
-      date_range: '2020 — Present',
-      description: 'Leading digital transformation and automation for family business operations.'
-    }
+    { id: '1', job_title: 'AI Engineer', company: 'Cognizant / Macy\'s', date_range: '2022 — Present', description: 'Developing high-performance digital experiences and AI-driven platforms.' },
+    { id: '2', job_title: 'Managing Director', company: 'Galaxy Traders', date_range: '2020 — Present', description: 'Leading digital transformation and automation.' }
   ]);
 
   const [projects, setProjects] = useState([
-    {
-      id: '1',
-      title: 'GALAXY TRADERS SITE',
-      description: 'Full-stack chemical supply-chain platform for specialized chemical industries.',
-      tags: ['Next.js', 'Supabase', 'Tailwind'],
-      image_url: 'https://via.placeholder.com/600x400/0A0A0A/00FFD1?text=GALAXY+TRADERS',
-      demo_link: '#',
-      github_link: 'https://github.com/mizansyed101'
-    }
+    { id: '1', title: 'GALAXY TRADERS SITE', description: 'Full-stack chemical supply-chain platform.', tags: ['Next.js', 'Supabase', 'Tailwind'], image_url: 'https://via.placeholder.com/600x400/0A0A0A/00FFD1?text=GALAXY+TRADERS', demo_link: '#', github_link: '#' }
   ]);
 
   const [socials, setSocials] = useState([
@@ -45,12 +24,32 @@ export const ContentProvider = ({ children }) => {
     { id: '3', platform: 'Email', url: 'mailto:mizansyedwork@gmail.com' }
   ]);
 
-  // Sync with Supabase (if credentials exist)
   const syncData = async () => {
     try {
-      console.log('Syncing data with Supabase...');
+      const res = await fetch('/api/content');
+      const data = await res.json();
+      if (data.profile) {
+        setProfile(data.profile);
+        setExperiences(data.experiences);
+        setProjects(data.projects);
+        setSocials(data.socials);
+      }
+      console.log('Syncing data with Redis backend...');
     } catch (err) {
-      console.error('Fetch error:', err);
+      console.warn('Backend reach error. Using local defaults.', err);
+    }
+  };
+
+  const commitChanges = async () => {
+    try {
+      const res = await fetch('/api/content', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ profile, experiences, projects, socials })
+      });
+      if (res.ok) alert('Changes pushed to Redis!');
+    } catch (err) {
+      console.error('Push error:', err);
     }
   };
 
@@ -67,7 +66,7 @@ export const ContentProvider = ({ children }) => {
     <ContentContext.Provider value={{
       profile, experiences, projects, socials,
       updateProfile, updateExperiences, updateProjects, updateSocials,
-      syncData
+      syncData, commitChanges
     }}>
       {children}
     </ContentContext.Provider>

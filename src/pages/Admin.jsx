@@ -6,7 +6,7 @@ const Admin = () => {
   const [isAuth, setIsAuth] = useState(false);
   const [password, setPassword] = useState('');
   const [activeTab, setActiveTab] = useState('Overview');
-  const { profile, experiences, projects, socials, updateProfile, updateExperiences, updateProjects, updateSocials } = useContent();
+  const { profile, experiences, projects, socials, updateProfile, updateExperiences, updateProjects, updateSocials, commitChanges } = useContent();
 
   const handleLogin = (e) => {
     e.preventDefault();
@@ -214,7 +214,12 @@ const Admin = () => {
 
       <motion.div initial={{ y: 100 }} animate={{ y: 0 }} style={{ position: 'fixed', bottom: 30, right: 30, backgroundColor: 'var(--primary-color)', color: 'var(--bg-color)', padding: '1rem 2rem', fontWeight: '900', display: 'flex', gap: '2rem', boxShadow: '0 10px 30px rgba(0,255,209,0.3)', zIndex: 100 }}>
         <span>LOCAL CACHE SYNCED</span>
-        <button style={{ backgroundColor: 'transparent', border: 'none', textDecoration: 'underline', cursor: 'pointer', fontWeight: '900', fontSize: '0.8rem' }}>MANUAL PUSH</button>
+        <button 
+          onClick={commitChanges}
+          style={{ backgroundColor: 'transparent', border: 'none', textDecoration: 'underline', cursor: 'pointer', fontWeight: '900', fontSize: '0.8rem' }}
+        >
+          MANUAL PUSH
+        </button>
       </motion.div>
     </div>
   );
