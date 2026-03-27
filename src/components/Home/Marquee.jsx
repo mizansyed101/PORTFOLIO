@@ -1,13 +1,18 @@
-const technologies = [
-  'React', 'Node.js', 'Python', 'Supabase', 'Tailwind', 'Next.js', 'Framer Motion', 'Vercel', 'PostgreSQL', 'Docker',
-  'Git', 'AWS', 'Firebase', 'Redux', 'TypeScript'
-];
+import { useContent } from '../../context/ContentContext';
 
 const Marquee = () => {
+  const { skills } = useContent();
+
+  // If there are no skills yet, show a placeholder or nothing
+  if (!skills || skills.length === 0) return null;
+
+  // Repeat the skills list multiple times to ensure the marquee fills the screen
+  const displaySkills = [...skills, ...skills, ...skills, ...skills];
+
   return (
     <div className="marquee-container">
       <div className="marquee-content">
-        {[...technologies, ...technologies].map((tech, index) => (
+        {displaySkills.map((tech, index) => (
           <span key={index} className="marquee-item">
             {tech}
           </span>
@@ -20,4 +25,5 @@ const Marquee = () => {
 };
 
 export default Marquee;
+
 
