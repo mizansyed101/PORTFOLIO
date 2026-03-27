@@ -37,78 +37,61 @@ const ProjectGrid = () => {
             whileHover={{ y: -8 }}
             className="glass"
             style={{ 
-              borderRadius: '16px',
-              overflow: 'hidden',
+              borderRadius: '24px',
+              padding: '3rem',
               display: 'flex',
               flexDirection: 'column',
-              transition: 'border-color 0.3s ease'
+              justifyContent: 'space-between',
+              transition: 'border-color 0.3s ease',
+              border: '1px solid var(--border-color)'
             }}
           >
-            <div style={{ 
-              width: '100%', 
-              aspectRatio: '16/10', 
-              overflow: 'hidden',
-              position: 'relative'
-            }}>
-              <img 
-                src={project.image_url} 
-                alt={project.title} 
-                style={{ width: '100%', height: '100%', objectFit: 'cover' }} 
-              />
-              <div 
-                style={{ 
-                  position: 'absolute', 
-                  top: 0, left: 0, width: '100%', height: '100%', 
-                  background: 'linear-gradient(to bottom, transparent 40%, var(--bg-color) 100%)',
-                  opacity: 0.4
-                }} 
-              />
-            </div>
-            
-            <div style={{ padding: '2.5rem' }}>
-              <div style={{ display: 'flex', gap: '0.6rem', marginBottom: '1.25rem', flexWrap: 'wrap' }}>
-                {(project.tags || []).map(tag => (
+            <div>
+              <div style={{ display: 'flex', gap: '0.6rem', marginBottom: '1.5rem', flexWrap: 'wrap' }}>
+                {(typeof project.tags === 'string' ? project.tags.split(',') : (project.tags || [])).map(tag => (
                   <span key={tag} style={{ 
                     backgroundColor: 'var(--accent-glow)',
                     color: 'var(--primary-color)',
-                    padding: '0.3rem 0.8rem', 
+                    padding: '0.4rem 1rem', 
                     fontSize: '0.7rem', 
-                    borderRadius: '4px',
-                    fontWeight: 600,
-                    textTransform: 'uppercase'
+                    borderRadius: '6px',
+                    fontWeight: 700,
+                    textTransform: 'uppercase',
+                    letterSpacing: '0.05em'
                   }}>
-                    {tag}
+                    {tag.trim()}
                   </span>
                 ))}
               </div>
-              <h3 style={{ fontSize: '1.75rem', marginBottom: '1rem', fontWeight: 700 }}>
+              <h3 style={{ fontSize: '2rem', marginBottom: '1.25rem', fontWeight: 800, lineHeight: 1.2 }}>
                 {project.title}
               </h3>
-              <p style={{ color: 'var(--text-secondary)', fontSize: '0.95rem', lineHeight: '1.6' }}>
+              <p style={{ color: 'var(--text-secondary)', fontSize: '1.05rem', lineHeight: '1.7', marginBottom: '2.5rem' }}>
                 {project.description}
               </p>
-              
-              <div style={{ marginTop: '2rem', display: 'flex', gap: '1.5rem' }}>
-                <a 
-                  href={project.demo_link} 
-                  target="_blank" 
-                  rel="noopener noreferrer"
-                  style={{ fontSize: '0.85rem', fontWeight: 600, color: 'var(--primary-color)', display: 'flex', alignItems: 'center', gap: '0.5rem' }}
-                >
-                  Live Demo <span>↗</span>
-                </a>
-                <a 
-                  href={project.github_link} 
-                  target="_blank" 
-                  rel="noopener noreferrer"
-                  style={{ fontSize: '0.85rem', fontWeight: 600, color: 'var(--text-secondary)' }}
-                >
-                  Github <span>→</span>
-                </a>
-              </div>
+            </div>
+            
+            <div style={{ display: 'flex', gap: '2rem', alignItems: 'center', borderTop: '1px solid var(--border-color)', paddingTop: '2rem' }}>
+              <a 
+                href={project.demo_link} 
+                target="_blank" 
+                rel="noopener noreferrer"
+                style={{ fontSize: '0.9rem', fontWeight: 700, color: 'var(--primary-color)', display: 'flex', alignItems: 'center', gap: '0.5rem' }}
+              >
+                LIVE DEMO <span style={{ fontSize: '1.1rem' }}>↗</span>
+              </a>
+              <a 
+                href={project.github_link} 
+                target="_blank" 
+                rel="noopener noreferrer"
+                style={{ fontSize: '0.9rem', fontWeight: 700, color: 'var(--text-secondary)', display: 'flex', alignItems: 'center', gap: '0.5rem' }}
+              >
+                SOURCE <span style={{ fontSize: '1.1rem' }}>→</span>
+              </a>
             </div>
           </motion.div>
         ))}
+
       </div>
     </section>
   );

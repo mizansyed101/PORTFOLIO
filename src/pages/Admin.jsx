@@ -252,7 +252,17 @@ const Admin = ({ theme }) => {
                     <div key={proj.id} className="card" style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
                       <input value={proj.title} onChange={(e) => handleProjectChange(proj.id, 'title', e.target.value)} placeholder="Project Title" style={{ backgroundColor: 'var(--bg-color)', border: '1px solid var(--border-color)', padding: '1rem', color: 'var(--text-primary)', borderRadius: '8px', fontSize: '1.1rem', fontWeight: 700 }} />
                       <textarea value={proj.description} onChange={(e) => handleProjectChange(proj.id, 'description', e.target.value)} rows="2" placeholder="Brief Description" style={{ backgroundColor: 'var(--bg-color)', border: '1px solid var(--border-color)', padding: '1rem', color: 'var(--text-primary)', borderRadius: '8px' }} />
-                      <input value={proj.image_url} onChange={(e) => handleProjectChange(proj.id, 'image_url', e.target.value)} placeholder="High-Res Image URL" style={{ backgroundColor: 'var(--bg-color)', border: '1px solid var(--border-color)', padding: '1rem', color: 'var(--text-primary)', borderRadius: '8px' }} />
+                      
+                      <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+                        <label style={{ fontSize: '0.6rem', fontWeight: 800, color: 'var(--primary-color)' }}>TECH TAGS (COMMA SEPARATED)</label>
+                        <input 
+                          value={Array.isArray(proj.tags) ? proj.tags.join(', ') : proj.tags} 
+                          onChange={(e) => handleProjectChange(proj.id, 'tags', e.target.value)} 
+                          placeholder="React, Supabase, Tailwind" 
+                          style={{ backgroundColor: 'var(--bg-color)', border: '1px solid var(--border-color)', padding: '1rem', color: 'var(--text-primary)', borderRadius: '8px' }} 
+                        />
+                      </div>
+
                       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
                         <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
                           <label style={{ fontSize: '0.6rem', fontWeight: 800 }}>LIVE DEPLOYMENT</label>
@@ -268,6 +278,7 @@ const Admin = ({ theme }) => {
                   <button onClick={addProject} style={{ padding: '1.5rem', border: '1px dashed var(--primary-color)', color: 'var(--primary-color)', backgroundColor: 'var(--accent-glow)', borderRadius: '16px', cursor: 'pointer', fontWeight: 700 }}>+ DEPLOY NEW PROJECT MODULE</button>
                 </div>
               )}
+
 
               {activeTab === 'Skills' && (
                 <div className="card" style={{ display: 'flex', flexDirection: 'column', gap: '2rem' }}>
