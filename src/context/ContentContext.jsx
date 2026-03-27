@@ -24,6 +24,8 @@ export const ContentProvider = ({ children }) => {
     { id: '3', platform: 'Email', url: 'mailto:mizansyedwork@gmail.com' }
   ]);
 
+  const [skills, setSkills] = useState(['Next.js', 'React', 'Supabase', 'Python']);
+
   const syncData = async () => {
     try {
       const res = await fetch('/api/content');
@@ -33,6 +35,7 @@ export const ContentProvider = ({ children }) => {
         setExperiences(data.experiences);
         setProjects(data.projects);
         setSocials(data.socials);
+        setSkills(data.skills || ['Next.js', 'React', 'Supabase', 'Python']);
       }
       console.log('Syncing data with Redis backend...');
     } catch (err) {
@@ -45,11 +48,17 @@ export const ContentProvider = ({ children }) => {
       const res = await fetch('/api/content', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ profile, experiences, projects, socials })
+        body: JSON.stringify({ profile, experiences, projects, socials, skills })
       });
-      if (res.ok) alert('Changes pushed to Redis!');
+      if (res.ok) {
+        alert('Changes pushed to Redis!');
+      } else {
+        const error = await res.json();
+        alert(`Failed to save: ${error.error || 'Server error'}`);
+      }
     } catch (err) {
       console.error('Push error:', err);
+      alert('Network error. Check your backend status.');
     }
   };
 
@@ -61,16 +70,18 @@ export const ContentProvider = ({ children }) => {
   const updateExperiences = (newExp) => setExperiences(newExp);
   const updateProjects = (newProj) => setProjects(newProj);
   const updateSocials = (newSoc) => setSocials(newSoc);
+  const updateSkills = (newSkills) => setSkills(newSkills);
 
   return (
     <ContentContext.Provider value={{
-      profile, experiences, projects, socials,
-      updateProfile, updateExperiences, updateProjects, updateSocials,
+      profile, experiences, projects, socials, skills,
+      updateProfile, updateExperiences, updateProjects, updateSocials, updateSkills,
       syncData, commitChanges
     }}>
       {children}
     </ContentContext.Provider>
   );
 };
+
 
 export const useContent = () => useContext(ContentContext);

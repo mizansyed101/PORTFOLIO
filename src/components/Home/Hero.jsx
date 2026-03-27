@@ -3,7 +3,7 @@ import { useContent } from '../../context/ContentContext';
 import heroImg from '../../assets/hero_refined.png';
 
 const Hero = () => {
-  const { profile } = useContent();
+  const { profile, skills } = useContent();
 
   return (
     <section 
@@ -25,8 +25,9 @@ const Hero = () => {
         transition={{ duration: 0.8, ease: "easeOut" }}
       >
         <div className="tech-brackets">
-          Next.js / React / Supabase / Python
+          {skills.join(' / ')}
         </div>
+
         
         <h1 style={{ 
           fontSize: 'clamp(3.5rem, 8vw, 6rem)', 

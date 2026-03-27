@@ -24,12 +24,13 @@ export default async function handler(req, res) {
 
   if (req.method === 'POST') {
     try {
-      const { profile, experiences, projects, socials } = req.body;
-      await redis.set('portfolio_data', { profile, experiences, projects, socials });
+      const { profile, experiences, projects, socials, skills } = req.body;
+      await redis.set('portfolio_data', { profile, experiences, projects, socials, skills });
       return res.status(200).json({ message: 'Success' });
     } catch (error) {
       return res.status(500).json({ error: 'Failed to save data' });
     }
+
   }
 
   return res.status(405).json({ error: 'Method not allowed' });

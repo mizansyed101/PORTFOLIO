@@ -6,7 +6,9 @@ const Admin = ({ theme }) => {
   const [isAuth, setIsAuth] = useState(false);
   const [password, setPassword] = useState('');
   const [activeTab, setActiveTab] = useState('Overview');
-  const { profile, experiences, projects, socials, updateProfile, updateExperiences, updateProjects, updateSocials, commitChanges } = useContent();
+  const { profile, experiences, projects, socials, skills, updateProfile, updateExperiences, updateProjects, updateSocials, updateSkills, commitChanges } = useContent();
+  const [newSkill, setNewSkill] = useState('');
+  const [isSaving, setIsSaving] = useState(false);
 
   const handleLogin = (e) => {
     e.preventDefault();
@@ -15,6 +17,12 @@ const Admin = ({ theme }) => {
     } else {
       alert('Unauthorized access.');
     }
+  };
+
+  const handleSave = async () => {
+    setIsSaving(true);
+    await commitChanges();
+    setIsSaving(false);
   };
 
   const handleProfileChange = (e) => {
@@ -60,6 +68,17 @@ const Admin = ({ theme }) => {
     updateProjects([...projects, newProj]);
   };
 
+  const addSkill = () => {
+    if (newSkill && !skills.includes(newSkill)) {
+      updateSkills([...skills, newSkill]);
+      setNewSkill('');
+    }
+  };
+
+  const removeSkill = (skillToRemove) => {
+    updateSkills(skills.filter(s => s !== skillToRemove));
+  };
+
   if (!isAuth) {
     return (
       <main style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'var(--bg-color)' }}>
@@ -102,6 +121,7 @@ const Admin = ({ theme }) => {
     { id: 'About Me', icon: '👤' },
     { id: 'Experience', icon: '💼' },
     { id: 'Projects', icon: '🚀' },
+    { id: 'Skills', icon: '🛠️' },
     { id: 'Social Links', icon: '🌐' }
   ];
 
@@ -249,6 +269,29 @@ const Admin = ({ theme }) => {
                 </div>
               )}
 
+              {activeTab === 'Skills' && (
+                <div className="card" style={{ display: 'flex', flexDirection: 'column', gap: '2rem' }}>
+                  <div style={{ display: 'flex', gap: '1rem' }}>
+                    <input 
+                      value={newSkill} 
+                      onChange={(e) => setNewSkill(e.target.value)} 
+                      placeholder="Add new skill (e.g. Docker)" 
+                      style={{ flex: 1, backgroundColor: 'var(--bg-color)', border: '1px solid var(--border-color)', padding: '1rem', color: 'var(--text-primary)', borderRadius: '8px' }} 
+                      onKeyPress={(e) => e.key === 'Enter' && addSkill()}
+                    />
+                    <button onClick={addSkill} style={{ padding: '0 2rem', backgroundColor: 'var(--primary-color)', color: 'white', border: 'none', borderRadius: '8px', fontWeight: 700, cursor: 'pointer' }}>ADD</button>
+                  </div>
+                  <div style={{ display: 'flex', flexWrap: 'wrap', gap: '1rem' }}>
+                    {skills.map(skill => (
+                      <div key={skill} className="glass" style={{ padding: '0.75rem 1.25rem', borderRadius: '12px', display: 'flex', alignItems: 'center', gap: '1rem', border: '1px solid var(--primary-color)' }}>
+                        <span style={{ fontWeight: 600 }}>{skill}</span>
+                        <button onClick={() => removeSkill(skill)} style={{ background: 'transparent', border: 'none', color: '#ff4444', cursor: 'pointer', fontSize: '1rem', fontWeight: 800 }}>✕</button>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+
               {activeTab === 'Social Links' && (
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
                   {socials.map((soc) => (
@@ -283,26 +326,30 @@ const Admin = ({ theme }) => {
           zIndex: 100 
         }}
       >
-        <span style={{ fontSize: '0.8rem', letterSpacing: '0.1em' }}>BACKEND SYNC: READY</span>
+        <span style={{ fontSize: '0.8rem', letterSpacing: '0.1em' }}>
+          {isSaving ? 'UPLOADING...' : 'BACKEND SYNC: READY'}
+        </span>
         <button 
-          onClick={commitChanges}
+          onClick={handleSave}
+          disabled={isSaving}
           style={{ 
             backgroundColor: 'rgba(255,255,255,0.2)', 
             border: 'none', 
             color: 'white',
             padding: '0.5rem 1rem',
             borderRadius: '8px',
-            cursor: 'pointer', 
+            cursor: isSaving ? 'not-allowed' : 'pointer', 
             fontWeight: '900', 
             fontSize: '0.75rem' 
           }}
         >
-          PUSH CHANGES
+          {isSaving ? 'SAVING...' : 'PUSH CHANGES'}
         </button>
       </motion.div>
     </div>
   );
 };
+
 
 export default Admin;
 
