@@ -70,9 +70,10 @@ CREATE POLICY "Public Read" ON projects FOR SELECT USING (true);
 CREATE POLICY "Public Read" ON skills FOR SELECT USING (true);
 CREATE POLICY "Public Read" ON socials FOR SELECT USING (true);
 
--- Authenticated Users can CRUD (Simplified for personal use)
-CREATE POLICY "Authenticated Manage" ON profile ALL TO authenticated USING (true) WITH CHECK (true);
-CREATE POLICY "Authenticated Manage" ON experiences ALL TO authenticated USING (true) WITH CHECK (true);
-CREATE POLICY "Authenticated Manage" ON projects ALL TO authenticated USING (true) WITH CHECK (true);
-CREATE POLICY "Authenticated Manage" ON skills ALL TO authenticated USING (true) WITH CHECK (true);
-CREATE POLICY "Authenticated Manage" ON socials ALL TO authenticated USING (true) WITH CHECK (true);
+-- Anyone with the ANON API key can CRUD (Simplified for personal use)
+CREATE POLICY "Anon Manage" ON profile ALL USING (true) WITH CHECK (true);
+CREATE POLICY "Anon Manage" ON experiences ALL USING (true) WITH CHECK (true);
+CREATE POLICY "Anon Manage" ON projects ALL USING (true) WITH CHECK (true);
+CREATE POLICY "Anon Manage" ON skills ALL USING (true) WITH CHECK (true);
+CREATE POLICY "Anon Manage" ON socials ALL USING (true) WITH CHECK (true);
+

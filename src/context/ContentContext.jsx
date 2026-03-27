@@ -15,21 +15,13 @@ export const ContentProvider = ({ children }) => {
     { id: '2', job_title: 'Managing Director', company: 'Galaxy Traders', date_range: '2020 — Present', description: 'Leading digital transformation and automation.' }
   ]);
 
-  const [projects, setProjects] = useState([
-    { id: '1', title: 'GALAXY TRADERS SITE', description: 'Full-stack chemical supply-chain platform.', tags: ['Next.js', 'Supabase', 'Tailwind'], image_url: 'https://via.placeholder.com/600x400/0A0A0A/00FFD1?text=GALAXY+TRADERS', demo_link: '#', github_link: '#' }
-  ]);
-
-  const [socials, setSocials] = useState([
-    { id: '1', platform: 'Github', url: 'https://github.com/mizansyed101' },
-    { id: '2', platform: 'LinkedIn', url: '#' },
-    { id: '3', platform: 'Email', url: 'mailto:mizansyedwork@gmail.com' }
-  ]);
-
-  const [skills, setSkills] = useState(['Next.js', 'React', 'Supabase', 'Python']);
+  const [projects, setProjects] = useState([]);
+  const [socials, setSocials] = useState([]);
+  const [skills, setSkills] = useState([]);
 
   const syncData = async () => {
     try {
-      console.log('Syncing data with Supabase...');
+      console.log('Syncing data from Supabase...');
       
       const { data: prof } = await supabase.from('profile').select('*').single();
       if (prof) setProfile(prof);
@@ -47,35 +39,66 @@ export const ContentProvider = ({ children }) => {
       if (sks) setSkills(sks.map(s => s.name));
 
     } catch (err) {
-      console.warn('Supabase fetch error. Check if SQL schema is initialized.', err);
+      console.warn('Sync failed. Schema may not be initialized.', err);
     }
   };
 
   const commitChanges = async () => {
     try {
-      // 1. Profile Upsert (Keep one row for simplicity)
-      await supabase.from('profile').upsert({ id: profile.id, ...profile });
+      console.log('Initiating backend sync...');
+      
+      // 1. Profile Upsert (Fixed ID for single profile)
+      const { error: pErr } = await supabase.from('profile').upsert({ 
+        id: profile.id || '00000000-0000-0000-0000-000000000001', 
+        name: profile.name,
+        role: profile.role,
+        summary: profile.summary
+      });
+      if (pErr) throw new Error(`Profile: ${pErr.message}`);
 
-      // 2. Experiences - Clear and Replace (Simple for personal portfolio sync)
+      // 2. Experiences
       await supabase.from('experiences').delete().neq('id', '00000000-0000-0000-0000-000000000000');
-      await supabase.from('experiences').insert(experiences.map(({ id, ...rest }) => rest));
+      const { error: eErr } = await supabase.from('experiences').insert(
+        experiences.map(({ id, created_at, ...rest }) => ({
+          job_title: rest.job_title,
+          company: rest.company,
+          date_range: rest.date_range,
+          description: rest.description
+        }))
+      );
+      if (eErr) throw new Error(`Experiences: ${eErr.message}`);
 
-      // 3. Projects
+      // 3. Projects (Parsing tags array)
       await supabase.from('projects').delete().neq('id', '00000000-0000-0000-0000-000000000000');
-      await supabase.from('projects').insert(projects.map(({ id, ...rest }) => rest));
+      const formattedProjects = projects.map(({ id, created_at, ...rest }) => ({
+        title: rest.title,
+        description: rest.description,
+        tags: typeof rest.tags === 'string' ? rest.tags.split(',').map(t => t.trim()).filter(t => t) : (rest.tags || []),
+        demo_link: rest.demo_link,
+        github_link: rest.github_link
+      }));
+      const { error: prErr } = await supabase.from('projects').insert(formattedProjects);
+      if (prErr) throw new Error(`Projects: ${prErr.message}`);
 
       // 4. Socials
       await supabase.from('socials').delete().neq('id', '00000000-0000-0000-0000-000000000000');
-      await supabase.from('socials').insert(socials.map(({ id, ...rest }) => rest));
+      const { error: sErr } = await supabase.from('socials').insert(
+        socials.map(s => ({ platform: s.platform, url: s.url }))
+      );
+      if (sErr) throw new Error(`Socials: ${sErr.message}`);
 
       // 5. Skills
       await supabase.from('skills').delete().neq('id', '00000000-0000-0000-0000-000000000000');
-      await supabase.from('skills').insert(skills.map(name => ({ name })));
+      const { error: skErr } = await supabase.from('skills').insert(
+        skills.map(name => ({ name }))
+      );
+      if (skErr) throw new Error(`Skills: ${skErr.message}`);
 
-      alert('Portfolio State Synchronized with Supabase Cloud!');
+      alert('SUCCESS: All changes synchronized to Supabase Cloud.');
+      await syncData();
     } catch (err) {
       console.error('Push error:', err);
-      alert('Error updating Supabase dashboard.');
+      alert(`SYNC FAILED: ${err.message}`);
     }
   };
 
@@ -99,6 +122,5 @@ export const ContentProvider = ({ children }) => {
     </ContentContext.Provider>
   );
 };
-
 
 export const useContent = () => useContext(ContentContext);
