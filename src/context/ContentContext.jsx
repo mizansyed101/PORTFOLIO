@@ -39,12 +39,15 @@ export const ContentProvider = ({ children }) => {
     }
   ]);
 
+  const [socials, setSocials] = useState([
+    { id: '1', platform: 'Github', url: 'https://github.com/mizansyed101' },
+    { id: '2', platform: 'LinkedIn', url: '#' },
+    { id: '3', platform: 'Email', url: 'mailto:mizansyedwork@gmail.com' }
+  ]);
+
   // Sync with Supabase (if credentials exist)
   const syncData = async () => {
     try {
-      // In a real scenario, we'd fetch from Supabase tables here
-      // const { data: exp } = await supabase.from('experiences').select('*').order('sort_order');
-      // if (exp) setExperiences(exp);
       console.log('Syncing data with Supabase...');
     } catch (err) {
       console.error('Fetch error:', err);
@@ -58,11 +61,12 @@ export const ContentProvider = ({ children }) => {
   const updateProfile = (newProfile) => setProfile(prev => ({ ...prev, ...newProfile }));
   const updateExperiences = (newExp) => setExperiences(newExp);
   const updateProjects = (newProj) => setProjects(newProj);
+  const updateSocials = (newSoc) => setSocials(newSoc);
 
   return (
     <ContentContext.Provider value={{
-      profile, experiences, projects,
-      updateProfile, updateExperiences, updateProjects,
+      profile, experiences, projects, socials,
+      updateProfile, updateExperiences, updateProjects, updateSocials,
       syncData
     }}>
       {children}

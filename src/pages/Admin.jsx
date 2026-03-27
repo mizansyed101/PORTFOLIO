@@ -6,7 +6,7 @@ const Admin = () => {
   const [isAuth, setIsAuth] = useState(false);
   const [password, setPassword] = useState('');
   const [activeTab, setActiveTab] = useState('Overview');
-  const { profile, experiences, projects, updateProfile, updateExperiences, updateProjects } = useContent();
+  const { profile, experiences, projects, socials, updateProfile, updateExperiences, updateProjects, updateSocials } = useContent();
 
   const handleLogin = (e) => {
     e.preventDefault();
@@ -29,6 +29,11 @@ const Admin = () => {
   const handleProjectChange = (id, field, value) => {
     const updated = projects.map(proj => proj.id === id ? { ...proj, [field]: value } : proj);
     updateProjects(updated);
+  };
+
+  const handleSocialChange = (id, field, value) => {
+    const updated = socials.map(soc => soc.id === id ? { ...soc, [field]: value } : soc);
+    updateSocials(updated);
   };
 
   const addExperience = () => {
@@ -100,7 +105,7 @@ const Admin = () => {
           <h3 className="display-font" style={{ fontSize: '1.2rem', marginTop: '0.5rem' }}>DASHBOARD_v2</h3>
         </div>
         <nav style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
-          {['Overview', 'About Me', 'Experience', 'Projects'].map(tab => (
+          {['Overview', 'About Me', 'Experience', 'Projects', 'Social Links'].map(tab => (
             <button
               key={tab}
               onClick={() => setActiveTab(tab)}
@@ -193,10 +198,20 @@ const Admin = () => {
               <button onClick={addProject} style={{ padding: '1rem', border: '1px dashed var(--primary-color)', color: 'var(--primary-color)', backgroundColor: 'transparent', cursor: 'pointer' }}>+ ADD PROJECT</button>
             </div>
           )}
+
+          {activeTab === 'Social Links' && (
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '2rem' }}>
+              {socials.map((soc) => (
+                <div key={soc.id} className="glass" style={{ padding: '2rem', display: 'grid', gridTemplateColumns: '1fr 2fr', gap: '1rem' }}>
+                  <input value={soc.platform} onChange={(e) => handleSocialChange(soc.id, 'platform', e.target.value)} placeholder="Platform" style={{ backgroundColor: '#000', border: '1px solid var(--border-color)', padding: '0.8rem', color: 'white' }} />
+                  <input value={soc.url} onChange={(e) => handleSocialChange(soc.id, 'url', e.target.value)} placeholder="URL" style={{ backgroundColor: '#000', border: '1px solid var(--border-color)', padding: '0.8rem', color: 'white' }} />
+                </div>
+              ))}
+            </div>
+          )}
         </section>
       </main>
 
-      {/* Persistence Bar */}
       <motion.div initial={{ y: 100 }} animate={{ y: 0 }} style={{ position: 'fixed', bottom: 30, right: 30, backgroundColor: 'var(--primary-color)', color: 'var(--bg-color)', padding: '1rem 2rem', fontWeight: '900', display: 'flex', gap: '2rem', boxShadow: '0 10px 30px rgba(0,255,209,0.3)', zIndex: 100 }}>
         <span>LOCAL CACHE SYNCED</span>
         <button style={{ backgroundColor: 'transparent', border: 'none', textDecoration: 'underline', cursor: 'pointer', fontWeight: '900', fontSize: '0.8rem' }}>MANUAL PUSH</button>
