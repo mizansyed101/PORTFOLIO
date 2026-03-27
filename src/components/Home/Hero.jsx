@@ -1,6 +1,9 @@
 import { motion } from 'framer-motion';
+import { useContent } from '../../context/ContentContext';
 
 const Hero = () => {
+  const { profile } = useContent();
+
   return (
     <section className="container" style={{ 
       minHeight: '90vh', 
@@ -21,7 +24,7 @@ const Hero = () => {
           fontSize: '0.9rem',
           fontWeight: 'bold'
         }}>
-          AI Full Stack Engineer
+          {profile.role}
         </span>
         <h1 style={{ 
           fontSize: 'clamp(3rem, 10vw, 7rem)', 
@@ -29,7 +32,7 @@ const Hero = () => {
           marginTop: '1rem',
           marginBottom: '2rem'
         }}>
-          Hi, I'm Syed Mizan<span style={{ color: 'var(--primary-color)' }}>.</span>
+          Hi, I'm {profile.name}<span style={{ color: 'var(--primary-color)' }}>.</span>
         </h1>
         <p style={{ 
           color: 'var(--text-secondary)', 
@@ -37,7 +40,7 @@ const Hero = () => {
           fontSize: '1.2rem',
           fontWeight: '300'
         }}>
-          The Architect. Bridging high-level AI engineering with pixel-perfect, brutalist frontends. Based in Kolkata.
+          {profile.summary}
         </p>
       </motion.div>
 

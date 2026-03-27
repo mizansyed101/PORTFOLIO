@@ -1,30 +1,9 @@
 import { motion } from 'framer-motion';
-
-const experienceData = [
-  {
-    id: '01',
-    role: 'AI Engineer',
-    company: 'Cognizant / Macy\'s',
-    date: '2022 — Present',
-    description: 'Developing high-performance digital experiences and AI-driven platforms for enterprise projects.'
-  },
-  {
-    id: '02',
-    role: 'Managing Director',
-    company: 'Galaxy Traders',
-    date: '2020 — Present',
-    description: 'Leading digital transformation and automation for family business operations.'
-  },
-  {
-    id: '03',
-    role: 'AI Full Stack Developer',
-    company: 'Independent / Freelance',
-    date: '2019 — 2021',
-    description: 'Building custom AI solutions and high-fidelity web applications for diverse clients.'
-  }
-];
+import { useContent } from '../../context/ContentContext';
 
 const ExperienceList = () => {
+  const { experiences } = useContent();
+
   return (
     <section id="experience" className="container" style={{ paddingBottom: '12rem' }}>
       <header style={{ marginBottom: '6rem' }}>
@@ -39,7 +18,7 @@ const ExperienceList = () => {
       </header>
       
       <div style={{ display: 'flex', flexDirection: 'column', gap: '2px' }}>
-        {experienceData.map((item, index) => (
+        {experiences.map((item, index) => (
           <motion.div
             key={item.id}
             initial={{ opacity: 0, y: 20 }}
@@ -48,7 +27,7 @@ const ExperienceList = () => {
             transition={{ delay: index * 0.1 }}
             style={{
               display: 'grid',
-              gridTemplateColumns: '80px 1fr 1fr 2fr 50px',
+              gridTemplateColumns: '80px 1fr 1fr 2fr 100px',
               padding: '3rem 0',
               borderTop: '1px solid rgba(255, 255, 255, 0.05)',
               alignItems: 'center',
@@ -59,10 +38,10 @@ const ExperienceList = () => {
             onMouseOut={(e) => e.currentTarget.style.backgroundColor = 'transparent'}
           >
             <span style={{ color: 'var(--primary-color)', fontSize: '0.8rem', fontWeight: 'bold' }}>
-              {item.id}
+              0{index + 1}
             </span>
             <h3 className="display-font" style={{ fontSize: '1.2rem', textTransform: 'uppercase' }}>
-              {item.role}
+              {item.job_title}
             </h3>
             <span style={{ color: 'var(--text-secondary)', fontSize: '0.9rem' }}>
               {item.company}
@@ -71,7 +50,7 @@ const ExperienceList = () => {
               {item.description}
             </p>
             <span style={{ color: 'var(--text-secondary)', fontSize: '0.8rem', textAlign: 'right' }}>
-              {item.date}
+              {item.date_range}
             </span>
           </motion.div>
         ))}

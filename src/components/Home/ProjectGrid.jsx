@@ -1,30 +1,9 @@
 import { motion } from 'framer-motion';
-
-const projectData = [
-  {
-    id: '01',
-    title: 'GALAXY TRADERS SITE',
-    description: 'Full-stack chemical supply-chain platform for specialized chemical industries.',
-    tags: ['Next.js', 'Supabase', 'Tailwind'],
-    image: 'https://via.placeholder.com/600x400/0A0A0A/00FFD1?text=GALAXY+TRADERS'
-  },
-  {
-    id: '02',
-    title: 'E-BOOK GENERATOR',
-    description: 'AI-powered content generation system creating full-length E-books from simple prompts.',
-    tags: ['Python', 'Flask', 'OpenAI'],
-    image: 'https://via.placeholder.com/600x400/0A0A0A/00FFD1?text=E-BOOK+GEN'
-  },
-  {
-    id: '03',
-    title: 'GEN AI PLATFORM',
-    description: 'A comprehensive platform for AI model deployment and performance auditing.',
-    tags: ['React', 'Node.js', 'Vercel AI SDK'],
-    image: 'https://via.placeholder.com/600x400/0A0A0A/00FFD1?text=GEN+AI+PLATFORM'
-  }
-];
+import { useContent } from '../../context/ContentContext';
 
 const ProjectGrid = () => {
+  const { projects } = useContent();
+
   return (
     <section id="projects" className="container" style={{ paddingBottom: '12rem' }}>
       <header style={{ marginBottom: '6rem' }}>
@@ -39,7 +18,7 @@ const ProjectGrid = () => {
       </header>
 
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(400px, 1fr))', gap: '4rem' }}>
-        {projectData.map((project, index) => (
+        {projects.map((project, index) => (
           <motion.div
             key={project.id}
             initial={{ opacity: 0, scale: 0.95 }}
@@ -56,10 +35,10 @@ const ProjectGrid = () => {
               marginBottom: '2rem',
               overflow: 'hidden'
             }}>
-              <img src={project.image} alt={project.title} style={{ width: '100%', height: '100%', objectFit: 'cover', opacity: 0.7 }} />
+              <img src={project.image_url} alt={project.title} style={{ width: '100%', height: '100%', objectFit: 'cover', opacity: 0.7 }} />
             </div>
             <div style={{ display: 'flex', gap: '0.8rem', marginBottom: '1rem' }}>
-              {project.tags.map(tag => (
+              {(project.tags || []).map(tag => (
                 <span key={tag} style={{ 
                   color: 'var(--primary-color)', 
                   border: '1px solid var(--border-color)', 
