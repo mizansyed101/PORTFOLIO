@@ -1,8 +1,8 @@
 import { useState } from 'react';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import { useContent } from '../context/ContentContext';
 
-const Admin = () => {
+const Admin = ({ theme }) => {
   const [isAuth, setIsAuth] = useState(false);
   const [password, setPassword] = useState('');
   const [activeTab, setActiveTab] = useState('Overview');
@@ -53,7 +53,7 @@ const Admin = () => {
       title: 'New Project',
       description: 'Project description...',
       tags: ['React', 'JavaScript'],
-      image_url: 'https://via.placeholder.com/600x400/0A0A0A/00FFD1?text=NEW+PROJECT',
+      image_url: 'https://via.placeholder.com/600x400/0A0A0A/00A3FF?text=NEW+PROJECT',
       demo_link: '#',
       github_link: '#'
     };
@@ -62,163 +62,242 @@ const Admin = () => {
 
   if (!isAuth) {
     return (
-      <main style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-        <div className="glass" style={{ padding: '3rem', width: '400px', textAlign: 'center' }}>
-          <h2 className="display-font" style={{ color: 'var(--primary-color)', marginBottom: '2rem' }}>ADMIN ACCESS</h2>
+      <main style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'var(--bg-color)' }}>
+        <motion.div 
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="glass" 
+          style={{ padding: '4rem', width: '450px', textAlign: 'center', borderRadius: '24px' }}
+        >
+          <div style={{ color: 'var(--primary-color)', fontSize: '0.75rem', fontWeight: 800, letterSpacing: '0.4em', marginBottom: '1rem', textTransform: 'uppercase' }}>Secure Gateway</div>
+          <h2 style={{ fontSize: '2.5rem', fontWeight: 800, marginBottom: '2.5rem' }}>ADMIN PANEL</h2>
           <form onSubmit={handleLogin} style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
             <input 
               type="password" 
-              placeholder="Enter Credentials"
+              placeholder="System Access Key"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className="admin-input"
               style={{
-                backgroundColor: 'var(--bg-color)',
+                backgroundColor: 'var(--surface-low)',
                 border: '1px solid var(--border-color)',
-                padding: '1rem',
-                color: 'white',
+                padding: '1.25rem',
+                color: 'var(--text-primary)',
                 outline: 'none',
-                fontFamily: 'monospace'
+                borderRadius: '12px',
+                fontSize: '1rem',
+                textAlign: 'center'
               }}
             />
-            <button type="submit" style={{
-              backgroundColor: 'var(--primary-color)',
-              color: 'var(--bg-color)',
-              padding: '1rem',
-              fontWeight: 'bold',
-              border: 'none',
-              cursor: 'pointer'
-            }}>
+            <button type="submit" className="btn-primary" style={{ width: '100%', padding: '1.25rem' }}>
               AUTHENTICATE
             </button>
           </form>
-        </div>
+        </motion.div>
       </main>
     );
   }
 
+  const navItems = [
+    { id: 'Overview', icon: '📊' },
+    { id: 'About Me', icon: '👤' },
+    { id: 'Experience', icon: '💼' },
+    { id: 'Projects', icon: '🚀' },
+    { id: 'Social Links', icon: '🌐' }
+  ];
+
   return (
-    <div style={{ display: 'flex', minHeight: '100vh', paddingTop: '80px' }}>
-      <aside className="glass" style={{ width: '280px', padding: '2rem', height: 'calc(100vh - 80px)', position: 'fixed', zIndex: 10 }}>
-        <div style={{ marginBottom: '3rem' }}>
-          <span style={{ fontSize: '0.7rem', color: 'var(--text-secondary)', textTransform: 'uppercase' }}>Terminal</span>
-          <h3 className="display-font" style={{ fontSize: '1.2rem', marginTop: '0.5rem' }}>DASHBOARD_v2</h3>
+    <div style={{ display: 'flex', minHeight: '100vh', background: 'var(--bg-color)', color: 'var(--text-primary)' }}>
+      {/* Sidebar */}
+      <aside className="glass" style={{ width: '300px', padding: '2.5rem', height: '100vh', position: 'fixed', left: 0, top: 0, zIndex: 10, display: 'flex', flexDirection: 'column', borderRadius: '0 32px 32px 0' }}>
+        <div style={{ marginBottom: '4rem' }}>
+          <h3 style={{ fontSize: '1.5rem', fontWeight: 800 }}>MIZAN<span style={{ color: 'var(--primary-color)' }}>.</span>CMS</h3>
+          <span style={{ fontSize: '0.7rem', color: 'var(--text-secondary)', textTransform: 'uppercase', letterSpacing: '0.1em' }}>v3.0.1 PRO</span>
         </div>
-        <nav style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
-          {['Overview', 'About Me', 'Experience', 'Projects', 'Social Links'].map(tab => (
+        
+        <nav style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem', flex: 1 }}>
+          {navItems.map(item => (
             <button
-              key={tab}
-              onClick={() => setActiveTab(tab)}
+              key={item.id}
+              onClick={() => setActiveTab(item.id)}
               style={{
                 textAlign: 'left',
-                padding: '1rem',
-                backgroundColor: activeTab === tab ? 'rgba(0, 255, 209, 0.1)' : 'transparent',
-                color: activeTab === tab ? 'var(--primary-color)' : 'var(--text-secondary)',
+                padding: '1rem 1.5rem',
+                backgroundColor: activeTab === item.id ? 'var(--accent-glow)' : 'transparent',
+                color: activeTab === item.id ? 'var(--primary-color)' : 'var(--text-secondary)',
                 border: 'none',
-                borderLeft: activeTab === tab ? '2px solid var(--primary-color)' : 'none',
+                borderRadius: '12px',
                 cursor: 'pointer',
-                fontSize: '0.8rem',
-                fontWeight: activeTab === tab ? '700' : '400',
-                letterSpacing: '0.05rem'
+                fontSize: '0.9rem',
+                fontWeight: activeTab === item.id ? '700' : '500',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '1rem',
+                transition: 'all 0.2s ease'
               }}
             >
-              {tab.toUpperCase()}
+              <span style={{ fontSize: '1.1rem' }}>{item.icon}</span>
+              {item.id}
             </button>
           ))}
         </nav>
+
+        <button 
+          onClick={() => setIsAuth(false)}
+          style={{ padding: '1rem', background: 'transparent', border: '1px solid #ff4444', color: '#ff4444', borderRadius: '12px', cursor: 'pointer', fontWeight: 600, fontSize: '0.8rem' }}
+        >
+          LOGOUT SESSION
+        </button>
       </aside>
 
-      <main style={{ marginLeft: '280px', flex: 1, padding: '4rem' }}>
-        <header style={{ marginBottom: '4rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-          <h2 className="display-font" style={{ fontSize: '2.5rem' }}>{activeTab} Management</h2>
-          <button style={{ padding: '0.6rem 1.5rem', backgroundColor: 'transparent', border: '1px solid #ff4444', color: '#ff4444', fontSize: '0.7rem' }} onClick={() => setIsAuth(false)}>LOGOUT</button>
+      {/* Content */}
+      <main style={{ marginLeft: '300px', flex: 1, padding: '4rem 6rem' }}>
+        <header style={{ marginBottom: '4rem', display: 'flex', justifyContent: 'space-between', alignItems: 'end' }}>
+          <div>
+            <span style={{ color: 'var(--primary-color)', fontWeight: 700, fontSize: '0.8rem', textTransform: 'uppercase', letterSpacing: '0.2em' }}>Management Path</span>
+            <h2 style={{ fontSize: '3rem', fontWeight: 800 }}>{activeTab}</h2>
+          </div>
+          <p style={{ color: 'var(--text-secondary)', fontSize: '0.9rem' }}>System Status: <span style={{ color: '#2ecc71', fontWeight: 700 }}>● ONLINE</span></p>
         </header>
 
-        <section className="glass" style={{ padding: '3rem' }}>
-          {activeTab === 'Overview' && (
-            <div>
-              <p style={{ color: 'var(--text-secondary)', marginBottom: '2rem' }}>System Status: <span style={{ color: 'var(--primary-color)' }}>ACTIVE</span></p>
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '2rem' }}>
-                <div className="glass" style={{ padding: '2rem' }}>
-                  <span style={{ fontSize: '0.7rem', color: 'var(--text-secondary)' }}>EXPERIENCE COUNT</span>
-                  <p style={{ fontSize: '2rem', color: 'var(--primary-color)' }}>{experiences.length}</p>
-                </div>
-                <div className="glass" style={{ padding: '2rem' }}>
-                  <span style={{ fontSize: '0.7rem', color: 'var(--text-secondary)' }}>PROJECTS DEPLOYED</span>
-                  <p style={{ fontSize: '2rem', color: 'var(--primary-color)' }}>{projects.length}</p>
-                </div>
-              </div>
-            </div>
-          )}
-
-          {activeTab === 'About Me' && (
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '2rem' }}>
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
-                <label style={{ fontSize: '0.7rem', color: 'var(--primary-color)' }}>FULL NAME</label>
-                <input name="name" value={profile.name} onChange={handleProfileChange} style={{ backgroundColor: '#000', border: '1px solid var(--border-color)', padding: '1rem', color: 'white' }} />
-              </div>
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
-                <label style={{ fontSize: '0.7rem', color: 'var(--primary-color)' }}>OFFICIAL ROLE</label>
-                <input name="role" value={profile.role} onChange={handleProfileChange} style={{ backgroundColor: '#000', border: '1px solid var(--border-color)', padding: '1rem', color: 'white' }} />
-              </div>
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
-                <label style={{ fontSize: '0.7rem', color: 'var(--primary-color)' }}>PROFESSIONAL SUMMARY</label>
-                <textarea name="summary" value={profile.summary} onChange={handleProfileChange} rows="4" style={{ backgroundColor: '#000', border: '1px solid var(--border-color)', padding: '1rem', color: 'white', resize: 'vertical' }} />
-              </div>
-            </div>
-          )}
-
-          {activeTab === 'Experience' && (
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '2rem' }}>
-              {experiences.map((exp) => (
-                <div key={exp.id} className="glass" style={{ padding: '2rem', display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
-                  <input value={exp.job_title} onChange={(e) => handleExperienceChange(exp.id, 'job_title', e.target.value)} placeholder="Role" style={{ backgroundColor: '#000', border: '1px solid var(--border-color)', padding: '0.8rem', color: 'white' }} />
-                  <input value={exp.company} onChange={(e) => handleExperienceChange(exp.id, 'company', e.target.value)} placeholder="Company" style={{ backgroundColor: '#000', border: '1px solid var(--border-color)', padding: '0.8rem', color: 'white' }} />
-                  <input value={exp.date_range} onChange={(e) => handleExperienceChange(exp.id, 'date_range', e.target.value)} placeholder="Date Range" style={{ backgroundColor: '#000', border: '1px solid var(--border-color)', padding: '0.8rem', color: 'white' }} />
-                  <textarea value={exp.description} onChange={(e) => handleExperienceChange(exp.id, 'description', e.target.value)} rows="3" placeholder="Description" style={{ gridColumn: 'span 2', backgroundColor: '#000', border: '1px solid var(--border-color)', padding: '0.8rem', color: 'white' }} />
-                </div>
-              ))}
-              <button onClick={addExperience} style={{ padding: '1rem', border: '1px dashed var(--primary-color)', color: 'var(--primary-color)', backgroundColor: 'transparent', cursor: 'pointer' }}>+ ADD EXPERIENCE</button>
-            </div>
-          )}
-
-          {activeTab === 'Projects' && (
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '2rem' }}>
-              {projects.map((proj) => (
-                <div key={proj.id} className="glass" style={{ padding: '2rem', display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-                  <input value={proj.title} onChange={(e) => handleProjectChange(proj.id, 'title', e.target.value)} placeholder="Project Title" style={{ backgroundColor: '#000', border: '1px solid var(--border-color)', padding: '0.8rem', color: 'white' }} />
-                  <textarea value={proj.description} onChange={(e) => handleProjectChange(proj.id, 'description', e.target.value)} rows="2" placeholder="Description" style={{ backgroundColor: '#000', border: '1px solid var(--border-color)', padding: '0.8rem', color: 'white' }} />
-                  <input value={proj.image_url} onChange={(e) => handleProjectChange(proj.id, 'image_url', e.target.value)} placeholder="Image URL" style={{ backgroundColor: '#000', border: '1px solid var(--border-color)', padding: '0.8rem', color: 'white' }} />
-                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
-                    <input value={proj.demo_link} onChange={(e) => handleProjectChange(proj.id, 'demo_link', e.target.value)} placeholder="Live Link" style={{ backgroundColor: '#000', border: '1px solid var(--border-color)', padding: '0.8rem', color: 'white' }} />
-                    <input value={proj.github_link} onChange={(e) => handleProjectChange(proj.id, 'github_link', e.target.value)} placeholder="GitHub Link" style={{ backgroundColor: '#000', border: '1px solid var(--border-color)', padding: '0.8rem', color: 'white' }} />
+        <section style={{ maxWidth: '1000px' }}>
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={activeTab}
+              initial={{ opacity: 0, x: 20 }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: -20 }}
+              transition={{ duration: 0.3 }}
+            >
+              {activeTab === 'Overview' && (
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '2rem' }}>
+                  <div className="card" style={{ padding: '2.5rem' }}>
+                    <span style={{ fontSize: '0.75rem', color: 'var(--text-secondary)', fontWeight: 700, textTransform: 'uppercase' }}>Experience Blocks</span>
+                    <p style={{ fontSize: '4rem', fontWeight: 800, color: 'var(--primary-color)', margin: '1rem 0' }}>{experiences.length}</p>
+                    <p style={{ fontSize: '0.9rem', color: 'var(--text-secondary)' }}>All industry records parsed</p>
+                  </div>
+                  <div className="card" style={{ padding: '2.5rem' }}>
+                    <span style={{ fontSize: '0.75rem', color: 'var(--text-secondary)', fontWeight: 700, textTransform: 'uppercase' }}>Production Projects</span>
+                    <p style={{ fontSize: '4rem', fontWeight: 800, color: 'var(--primary-color)', margin: '1rem 0' }}>{projects.length}</p>
+                    <p style={{ fontSize: '0.9rem', color: 'var(--text-secondary)' }}>Live on digital grid</p>
                   </div>
                 </div>
-              ))}
-              <button onClick={addProject} style={{ padding: '1rem', border: '1px dashed var(--primary-color)', color: 'var(--primary-color)', backgroundColor: 'transparent', cursor: 'pointer' }}>+ ADD PROJECT</button>
-            </div>
-          )}
+              )}
 
-          {activeTab === 'Social Links' && (
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '2rem' }}>
-              {socials.map((soc) => (
-                <div key={soc.id} className="glass" style={{ padding: '2rem', display: 'grid', gridTemplateColumns: '1fr 2fr', gap: '1rem' }}>
-                  <input value={soc.platform} onChange={(e) => handleSocialChange(soc.id, 'platform', e.target.value)} placeholder="Platform" style={{ backgroundColor: '#000', border: '1px solid var(--border-color)', padding: '0.8rem', color: 'white' }} />
-                  <input value={soc.url} onChange={(e) => handleSocialChange(soc.id, 'url', e.target.value)} placeholder="URL" style={{ backgroundColor: '#000', border: '1px solid var(--border-color)', padding: '0.8rem', color: 'white' }} />
+              {activeTab === 'About Me' && (
+                <div className="card" style={{ display: 'flex', flexDirection: 'column', gap: '2.5rem' }}>
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
+                    <label style={{ fontSize: '0.75rem', fontWeight: 800, color: 'var(--primary-color)' }}>IDENTITY NAME</label>
+                    <input name="name" value={profile.name} onChange={handleProfileChange} style={{ backgroundColor: 'var(--bg-color)', border: '1px solid var(--border-color)', padding: '1.25rem', color: 'var(--text-primary)', borderRadius: '12px' }} />
+                  </div>
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
+                    <label style={{ fontSize: '0.75rem', fontWeight: 800, color: 'var(--primary-color)' }}>PRIMARY DIRECTIVE (ROLE)</label>
+                    <input name="role" value={profile.role} onChange={handleProfileChange} style={{ backgroundColor: 'var(--bg-color)', border: '1px solid var(--border-color)', padding: '1.25rem', color: 'var(--text-primary)', borderRadius: '12px' }} />
+                  </div>
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
+                    <label style={{ fontSize: '0.75rem', fontWeight: 800, color: 'var(--primary-color)' }}>MISSION STATEMENT (SUMMARY)</label>
+                    <textarea name="summary" value={profile.summary} onChange={handleProfileChange} rows="5" style={{ backgroundColor: 'var(--bg-color)', border: '1px solid var(--border-color)', padding: '1.25rem', color: 'var(--text-primary)', borderRadius: '12px', resize: 'vertical', lineHeight: '1.6' }} />
+                  </div>
                 </div>
-              ))}
-            </div>
-          )}
+              )}
+
+              {activeTab === 'Experience' && (
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
+                  {experiences.map((exp) => (
+                    <div key={exp.id} className="card" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1.5rem' }}>
+                      <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+                        <label style={{ fontSize: '0.65rem', fontWeight: 800, color: 'var(--text-secondary)' }}>ROLE</label>
+                        <input value={exp.job_title} onChange={(e) => handleExperienceChange(exp.id, 'job_title', e.target.value)} style={{ backgroundColor: 'var(--bg-color)', border: '1px solid var(--border-color)', padding: '1rem', color: 'var(--text-primary)', borderRadius: '8px' }} />
+                      </div>
+                      <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+                        <label style={{ fontSize: '0.65rem', fontWeight: 800, color: 'var(--text-secondary)' }}>COMPANY</label>
+                        <input value={exp.company} onChange={(e) => handleExperienceChange(exp.id, 'company', e.target.value)} style={{ backgroundColor: 'var(--bg-color)', border: '1px solid var(--border-color)', padding: '1rem', color: 'var(--text-primary)', borderRadius: '8px' }} />
+                      </div>
+                      <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem', gridColumn: 'span 2' }}>
+                        <label style={{ fontSize: '0.65rem', fontWeight: 800, color: 'var(--text-secondary)' }}>TIMELINE</label>
+                        <input value={exp.date_range} onChange={(e) => handleExperienceChange(exp.id, 'date_range', e.target.value)} style={{ backgroundColor: 'var(--bg-color)', border: '1px solid var(--border-color)', padding: '1rem', color: 'var(--text-primary)', borderRadius: '8px' }} />
+                      </div>
+                      <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem', gridColumn: 'span 2' }}>
+                        <label style={{ fontSize: '0.65rem', fontWeight: 800, color: 'var(--text-secondary)' }}>DESCRIPTION</label>
+                        <textarea value={exp.description} onChange={(e) => handleExperienceChange(exp.id, 'description', e.target.value)} rows="3" style={{ backgroundColor: 'var(--bg-color)', border: '1px solid var(--border-color)', padding: '1rem', color: 'var(--text-primary)', borderRadius: '8px', resize: 'vertical' }} />
+                      </div>
+                    </div>
+                  ))}
+                  <button onClick={addExperience} style={{ padding: '1.5rem', border: '1px dashed var(--primary-color)', color: 'var(--primary-color)', backgroundColor: 'var(--accent-glow)', borderRadius: '16px', cursor: 'pointer', fontWeight: 700 }}>+ INITIALIZE NEW EXPERIENCE BLOCK</button>
+                </div>
+              )}
+
+              {activeTab === 'Projects' && (
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
+                  {projects.map((proj) => (
+                    <div key={proj.id} className="card" style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
+                      <input value={proj.title} onChange={(e) => handleProjectChange(proj.id, 'title', e.target.value)} placeholder="Project Title" style={{ backgroundColor: 'var(--bg-color)', border: '1px solid var(--border-color)', padding: '1rem', color: 'var(--text-primary)', borderRadius: '8px', fontSize: '1.1rem', fontWeight: 700 }} />
+                      <textarea value={proj.description} onChange={(e) => handleProjectChange(proj.id, 'description', e.target.value)} rows="2" placeholder="Brief Description" style={{ backgroundColor: 'var(--bg-color)', border: '1px solid var(--border-color)', padding: '1rem', color: 'var(--text-primary)', borderRadius: '8px' }} />
+                      <input value={proj.image_url} onChange={(e) => handleProjectChange(proj.id, 'image_url', e.target.value)} placeholder="High-Res Image URL" style={{ backgroundColor: 'var(--bg-color)', border: '1px solid var(--border-color)', padding: '1rem', color: 'var(--text-primary)', borderRadius: '8px' }} />
+                      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
+                        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+                          <label style={{ fontSize: '0.6rem', fontWeight: 800 }}>LIVE DEPLOYMENT</label>
+                          <input value={proj.demo_link} onChange={(e) => handleProjectChange(proj.id, 'demo_link', e.target.value)} style={{ backgroundColor: 'var(--bg-color)', border: '1px solid var(--border-color)', padding: '0.8rem', color: 'var(--text-primary)', borderRadius: '8px' }} />
+                        </div>
+                        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+                          <label style={{ fontSize: '0.6rem', fontWeight: 800 }}>SOURCE GRID (GITHUB)</label>
+                          <input value={proj.github_link} onChange={(e) => handleProjectChange(proj.id, 'github_link', e.target.value)} style={{ backgroundColor: 'var(--bg-color)', border: '1px solid var(--border-color)', padding: '0.8rem', color: 'var(--text-primary)', borderRadius: '8px' }} />
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                  <button onClick={addProject} style={{ padding: '1.5rem', border: '1px dashed var(--primary-color)', color: 'var(--primary-color)', backgroundColor: 'var(--accent-glow)', borderRadius: '16px', cursor: 'pointer', fontWeight: 700 }}>+ DEPLOY NEW PROJECT MODULE</button>
+                </div>
+              )}
+
+              {activeTab === 'Social Links' && (
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
+                  {socials.map((soc) => (
+                    <div key={soc.id} className="card" style={{ display: 'grid', gridTemplateColumns: 'minmax(150px, 1fr) 2fr', gap: '1.5rem' }}>
+                      <input value={soc.platform} onChange={(e) => handleSocialChange(soc.id, 'platform', e.target.value)} placeholder="Node" style={{ backgroundColor: 'var(--bg-color)', border: '1px solid var(--border-color)', padding: '1rem', color: 'var(--text-primary)', borderRadius: '8px' }} />
+                      <input value={soc.url} onChange={(e) => handleSocialChange(soc.id, 'url', e.target.value)} placeholder="Target URL" style={{ backgroundColor: 'var(--bg-color)', border: '1px solid var(--border-color)', padding: '1rem', color: 'var(--text-primary)', borderRadius: '8px' }} />
+                    </div>
+                  ))}
+                </div>
+              )}
+            </motion.div>
+          </AnimatePresence>
         </section>
       </main>
 
-      <motion.div initial={{ y: 100 }} animate={{ y: 0 }} style={{ position: 'fixed', bottom: 30, right: 30, backgroundColor: 'var(--primary-color)', color: 'var(--bg-color)', padding: '1rem 2rem', fontWeight: '900', display: 'flex', gap: '2rem', boxShadow: '0 10px 30px rgba(0,255,209,0.3)', zIndex: 100 }}>
-        <span>LOCAL CACHE SYNCED</span>
+      <motion.div 
+        initial={{ y: 100 }} 
+        animate={{ y: 0 }} 
+        style={{ 
+          position: 'fixed', 
+          bottom: 40, 
+          right: 40, 
+          backgroundColor: 'var(--primary-color)', 
+          color: 'white', 
+          padding: '1.25rem 2.5rem', 
+          fontWeight: '900', 
+          display: 'flex', 
+          alignItems: 'center',
+          gap: '2.5rem', 
+          borderRadius: '20px',
+          boxShadow: '0 20px 50px var(--accent-glow)', 
+          zIndex: 100 
+        }}
+      >
+        <span style={{ fontSize: '0.8rem', letterSpacing: '0.1em' }}>BACKEND SYNC: READY</span>
         <button 
           onClick={commitChanges}
-          style={{ backgroundColor: 'transparent', border: 'none', textDecoration: 'underline', cursor: 'pointer', fontWeight: '900', fontSize: '0.8rem' }}
+          style={{ 
+            backgroundColor: 'rgba(255,255,255,0.2)', 
+            border: 'none', 
+            color: 'white',
+            padding: '0.5rem 1rem',
+            borderRadius: '8px',
+            cursor: 'pointer', 
+            fontWeight: '900', 
+            fontSize: '0.75rem' 
+          }}
         >
-          MANUAL PUSH
+          PUSH CHANGES
         </button>
       </motion.div>
     </div>
@@ -226,3 +305,4 @@ const Admin = () => {
 };
 
 export default Admin;
+
