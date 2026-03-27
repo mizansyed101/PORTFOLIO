@@ -1,4 +1,5 @@
 import { createContext, useContext, useState, useEffect } from 'react';
+import { supabase } from '../lib/supabaseClient';
 
 const ContentContext = createContext();
 
@@ -28,37 +29,53 @@ export const ContentProvider = ({ children }) => {
 
   const syncData = async () => {
     try {
-      const res = await fetch('/api/content');
-      const data = await res.json();
-      if (data.profile) {
-        setProfile(data.profile);
-        setExperiences(data.experiences);
-        setProjects(data.projects);
-        setSocials(data.socials);
-        setSkills(data.skills || ['Next.js', 'React', 'Supabase', 'Python']);
-      }
-      console.log('Syncing data with Redis backend...');
+      console.log('Syncing data with Supabase...');
+      
+      const { data: prof } = await supabase.from('profile').select('*').single();
+      if (prof) setProfile(prof);
+
+      const { data: exps } = await supabase.from('experiences').select('*').order('created_at', { ascending: true });
+      if (exps) setExperiences(exps);
+
+      const { data: projs } = await supabase.from('projects').select('*').order('created_at', { ascending: true });
+      if (projs) setProjects(projs);
+
+      const { data: socs } = await supabase.from('socials').select('*').order('created_at', { ascending: true });
+      if (socs) setSocials(socs);
+
+      const { data: sks } = await supabase.from('skills').select('*').order('id', { ascending: true });
+      if (sks) setSkills(sks.map(s => s.name));
+
     } catch (err) {
-      console.warn('Backend reach error. Using local defaults.', err);
+      console.warn('Supabase fetch error. Check if SQL schema is initialized.', err);
     }
   };
 
   const commitChanges = async () => {
     try {
-      const res = await fetch('/api/content', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ profile, experiences, projects, socials, skills })
-      });
-      if (res.ok) {
-        alert('Changes pushed to Redis!');
-      } else {
-        const error = await res.json();
-        alert(`Failed to save: ${error.error || 'Server error'}`);
-      }
+      // 1. Profile Upsert (Keep one row for simplicity)
+      await supabase.from('profile').upsert({ id: profile.id, ...profile });
+
+      // 2. Experiences - Clear and Replace (Simple for personal portfolio sync)
+      await supabase.from('experiences').delete().neq('id', '00000000-0000-0000-0000-000000000000');
+      await supabase.from('experiences').insert(experiences.map(({ id, ...rest }) => rest));
+
+      // 3. Projects
+      await supabase.from('projects').delete().neq('id', '00000000-0000-0000-0000-000000000000');
+      await supabase.from('projects').insert(projects.map(({ id, ...rest }) => rest));
+
+      // 4. Socials
+      await supabase.from('socials').delete().neq('id', '00000000-0000-0000-0000-000000000000');
+      await supabase.from('socials').insert(socials.map(({ id, ...rest }) => rest));
+
+      // 5. Skills
+      await supabase.from('skills').delete().neq('id', '00000000-0000-0000-0000-000000000000');
+      await supabase.from('skills').insert(skills.map(name => ({ name })));
+
+      alert('Portfolio State Synchronized with Supabase Cloud!');
     } catch (err) {
       console.error('Push error:', err);
-      alert('Network error. Check your backend status.');
+      alert('Error updating Supabase dashboard.');
     }
   };
 
